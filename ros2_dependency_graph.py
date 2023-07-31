@@ -5,6 +5,7 @@ from pathlib import Path
 from pyvis.network import Network
 import json
 
+
 # TODO: setup.py
 def main():
     graph = nx.DiGraph()
