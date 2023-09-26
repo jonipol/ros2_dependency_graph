@@ -1,0 +1,8 @@
+services:
+  dependecy-graph:
+    image: dependency_graph
+    container_name: dependency-graph
+    tty: true
+    stdin_open: true
+    volumes:
+      - "E:/koodailuja/ros2_dependency_graph:/ros2_dependency_graph"

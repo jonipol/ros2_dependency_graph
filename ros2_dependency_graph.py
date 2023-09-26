@@ -1,17 +1,15 @@
-import sys
 import xml.etree.ElementTree as ET
 import networkx as nx
 from pathlib import Path
-from pyvis.network import Network
-import json
 
 
-# TODO: setup.py
-def main():
+def get_graph_networkx() -> nx.DiGraph:
     graph = nx.DiGraph()
     # TODO: Check for path validity
     # TODO: Handle arg better
-    directory = str(sys.argv[1])
+    # directory = str(sys.argv[1])
+    # directory = "E:\koodailuja\\ros2_dependency_graph\\test\mock_package"
+    directory = "/ros2_dependency_graph/test/mock_package"
     package_xmls = [xml_path for xml_path in Path(directory).rglob('**/package.xml')]
 
     # Parse xml and add to graph
@@ -25,59 +23,19 @@ def main():
                 graph.add_node(child.text)
                 graph.add_edge(pkg.text, child.text)
 
-    net = Network()
-    net.from_nx(graph)
-    net.show_buttons(filter_=True)
-    options = {
-        "configure": {
-            "enabled": True
-        },
-        "interaction": {
-            "hover": True
-        },
-        "nodes": {
-            "borderWidth": 2,
-            "borderWidthSelected": 6,
-            "chosen": True,
-            "color": {
-                "highlight": {
-                    "border": "#FF4040",
-                    "background": "#EE3B3B"
-                },
-                "hover": {
-                    "border": "#DEB887",
-                    "background": "#FFD39B"
-                }
-            }
-        },
-        "edges": {
-            "arrows": {
-                "to": True
-            },
-            "color": {
-                "color": "#00bfff",
-                "highlight": "#EE3B3B",
-                "hover": "#DEB887"
-            }
-        },
-        "layout": {
-            "hierarchical": {
-                "enabled": True,
-                "levelSeparation": 150,
-                "nodeSpacing": 400,
-                "treeSpacing": 150,
-                "blockShifting": True,
-                "edgeMinimization": True,
-                "parentCentralization": True,
-                "direction": "UD",
-                "sortMethod": "directed",
-                "shakeTowards": "leaves"
-            }
-        }
-    }
-    net.set_options(json.dumps(options))
-    # net.toggle_physics(False)
-    net.write_html("graph.html")
+    return graph
+
+
+def networkx_plt():
+    graph = get_graph_networkx()
+
+    graphviz_graph = nx.nx_agraph.to_agraph(graph)
+    graphviz_graph.draw("g.png", args='-Gsize=50 -Gratio=0.5 -Gdpi=400', prog="dot")
+
+
+# TODO: setup.py
+def main():
+    networkx_plt()
 
 
 if __name__ == "__main__":
